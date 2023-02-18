@@ -1,7 +1,7 @@
 import { useState } from "react"
-import { postActions } from "../redux/slices/postSlice"
+import { postActions } from "../../redux/slices/postSlice"
 import { useDispatch, useSelector } from "react-redux"
-import { selectUsers } from "../redux/slices/userSlice"
+import { selectUsers } from "../../redux/slices/userSlice"
 
 const AddPostForm = () => {
   const dispatch = useDispatch()
@@ -65,10 +65,12 @@ const AddPostForm = () => {
           onChange={onContentChange}
         />
 
-        <button type="button" onClick={onSavePostClicked} disabled={!canSave}>Save Post</button>
+        <button type="button" onClick={onSavePostClicked} disabled={!canSave}>
+          Save Post
+        </button>
       </form>
     </section>
-  )
+  );
 }
 
 export default AddPostForm
