@@ -13,6 +13,7 @@ const ReactionButtons = ({ post }) => {
     const dispatch = useDispatch()
 
     //first one is the key, second one is the value.
+    //each entry will be an array of key and value
     const reactionButtons = Object.entries(reactionEmoji).map(([name, emoji]) => {
         return (
             <button
