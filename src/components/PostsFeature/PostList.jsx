@@ -1,11 +1,13 @@
 import { useSelector, useDispatch } from "react-redux";
 import { selectPosts, postActions } from "../../redux/slices/postSlice";
 import PostAuthor from "./PostAuthor";
+import ReactionButtons from "./ReactionButtons";
 import TimeAgo from "./TimeAgo";
 
 const PostList = () => {
   const posts = useSelector(selectPosts)
   const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
+
   const renderedPosts = orderedPosts.map((post) => {
     return (
       <article key={post.id}>
@@ -15,9 +17,11 @@ const PostList = () => {
           <PostAuthor userId={post.userId} />
           <TimeAgo timestamp={post.date} />
         </p>
+        <ReactionButtons post={post} />
       </article>
     )
   })
+
   return (
     <div>
       <h2>Posts:</h2>

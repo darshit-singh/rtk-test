@@ -46,9 +46,24 @@ const postSlice = createSlice({
                         title,
                         content,
                         date: new Date().toISOString(),
-                        userId
+                        userId,
+                        reactions: {
+                            thumbsUp: 0,
+                            wow: 0,
+                            heart: 0,
+                            rocket: 0,
+                            coffee: 0
+                        }
                     }
                 }
+            }
+        },
+        reactionAdded: (state, action) => {
+            const { postId, reaction } = action.payload
+            const existingPost = state.find(post => post.id === postId)
+            if (existingPost) {
+                //this would normally mutate the state but since we're inside createslice, immerjs takes care of it
+                existingPost.reactions[reaction]++
             }
         }
     }
