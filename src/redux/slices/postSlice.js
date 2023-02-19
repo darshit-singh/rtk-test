@@ -1,5 +1,8 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice, nanoid, createAsyncThunk } from "@reduxjs/toolkit";
 import { sub } from "date-fns";
+import axios from "axios";
+
+const POSTS_URL = 'https://jsonplaceholder.typicode.com/posts'
 
 //old static posts
 // {
@@ -33,6 +36,13 @@ const initialState = {
     status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
     error: null
 }
+
+//create the async thunk. A thunk means that it is a piece of code that does some delayed work.
+const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
+    const response = await axios.get(POSTS_URL)
+    return response.data
+})
+
 //can directly set state inside createslice as it uses immer.js under the hood so push like this doesn't mutate the state
 const postSlice = createSlice({
     name: "posts",
@@ -70,12 +80,41 @@ const postSlice = createSlice({
                 existingPost.reactions[reaction]++
             }
         }
+    },
+    extraReducers(builder) {
+        builder
+            .addCase(fetchPosts.pending, (state, action) => {
+                state.status = 'loading'
+            })
+            .addCase(fetchPosts.fulfilled, (state, action) => {
+                state.status = 'succeeded'
+                //Adding date and reactions
+                let min = 1
+                const loadedPosts = action.payload.map(post => {
+                    post.date = sub(new Date(), { minutes: min++ }).toISOString()
+                    post.reactions = {
+                        thumbsUp: 0,
+                        wow: 0,
+                        heart: 0,
+                        rocket: 0,
+                        coffee: 0
+                    }
+                    return post;
+                })
+                state.posts = state.posts.concat(loadedPosts)
+            })
+            .addCase(fetchPosts.rejected, (state, action) => {
+                state.status = 'failed'
+                state.error = action.error.message
+            })
     }
 })
 
 //always export select here, cuz if the shape of the state changes, you only have to make changes in this file, not everywhere else.
 export const selectPosts = (state) => state.posts.posts //posts array inside the initial state
 
-export const postActions = { ...postSlice.actions }
+export const postActions = {
+    ...postSlice.actions
+}
 
 export default postSlice.reducer
