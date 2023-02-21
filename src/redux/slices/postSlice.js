@@ -112,9 +112,12 @@ const postSlice = createSlice({
 
 //always export select here, cuz if the shape of the state changes, you only have to make changes in this file, not everywhere else.
 export const selectPosts = (state) => state.posts.posts //posts array inside the initial state
+export const getPostsStatus = state => state.posts.status
+export const getPostsError = state => state.posts.error
 
 export const postActions = {
-    ...postSlice.actions
+    ...postSlice.actions,
+    fetchPosts
 }
 
 export default postSlice.reducer
