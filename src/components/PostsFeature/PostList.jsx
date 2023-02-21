@@ -12,6 +12,8 @@ const PostList = () => {
   const postsStatus = useSelector(getPostsStatus)
   const postsError = useSelector(getPostsError)
 
+  //test commit
+
   useEffect(() => {
     if (postsStatus === 'idle') {
       dispatch(postActions.fetchPosts())
