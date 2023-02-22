@@ -16,7 +16,7 @@ const PostList = () => {
     if (postsStatus === 'idle') {
       dispatch(postActions.fetchPosts())
     }
-  }, [])
+  }, [postsStatus])
 
   let content;
   if (postsStatus === 'loading') {
