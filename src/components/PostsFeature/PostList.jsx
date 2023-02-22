@@ -1,9 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { selectPosts, postActions, getPostsError, getPostsStatus } from "../../redux/slices/postSlice";
 import { useEffect } from "react";
-import PostAuthor from "./PostAuthor";
-import ReactionButtons from "./ReactionButtons";
-import TimeAgo from "./TimeAgo";
+import PostExcerpt from "./PostExcerpt";
 
 const PostList = () => {
   const dispatch = useDispatch()
@@ -18,28 +16,23 @@ const PostList = () => {
     if (postsStatus === 'idle') {
       dispatch(postActions.fetchPosts())
     }
-  }, [postsStatus])
+  }, [])
 
-  const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
+  let content;
+  if (postsStatus === 'loading') {
+    content = <p>Loading ....</p>
+  } else if (postsStatus === 'succeeded') {
+    const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
+    content = orderedPosts.map(post => <PostExcerpt key={post.id} post={post} />)
+  } else if (postsStatus === 'failed') {
+    content = <p>{error}</p>
+  }
 
-  const renderedPosts = orderedPosts.map((post) => {
-    return (
-      <article key={post.id}>
-        <h3>{post.title}</h3>
-        <p>{post.content.substring(0, 100)}</p>
-        <p className="postCredit">
-          <PostAuthor userId={post.userId} />
-          <TimeAgo timestamp={post.date} />
-        </p>
-        <ReactionButtons post={post} />
-      </article>
-    )
-  })
 
   return (
     <div>
       <h2>Posts:</h2>
-      {renderedPosts}
+      {content}
     </div>
   )
 };
