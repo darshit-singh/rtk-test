@@ -11,8 +11,8 @@ function App() {
   return (
     <div className="App">
       {/* <Counter /> */}
-      <PostList />
       <AddPostForm />
+      <PostList />
     </div>
   );
 }
