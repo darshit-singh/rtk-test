@@ -43,6 +43,10 @@ const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
     return response.data
 })
 
+const addNewPost = createAsyncThunk('posts/addNewPost', async (initialPost) => {
+    const response = await axios.post(POSTS_URL, initialPost)
+    return response.data
+})
 //can directly set state inside createslice as it uses immer.js under the hood so push like this doesn't mutate the state
 const postSlice = createSlice({
     name: "posts",
@@ -107,6 +111,20 @@ const postSlice = createSlice({
                 state.status = 'failed'
                 state.error = action.error.message
             })
+            .addCase(addNewPost.fulfilled, (state, action) => {
+                console.log('action', action.payload)
+                action.payload.userId = Number(action.payload.userId)
+                action.payload.date = new Date().toISOString()
+                action.payload.reactions = {
+                    thumbsUp: 0,
+                    wow: 0,
+                    heart: 0,
+                    rocket: 0,
+                    coffee: 0
+                }
+                //this would normally mutate the state but since we're inside createslice, immerjs takes care of it
+                state.posts.push(action.payload)
+            })
     }
 })
 
@@ -117,7 +135,8 @@ export const getPostsError = state => state.posts.error
 
 export const postActions = {
     ...postSlice.actions,
-    fetchPosts
+    fetchPosts,
+    addNewPost
 }
 
 export default postSlice.reducer
