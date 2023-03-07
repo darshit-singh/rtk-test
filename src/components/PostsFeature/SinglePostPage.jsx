@@ -2,7 +2,7 @@ import { useSelector } from "react-redux"
 import { selectPostById } from "../../redux/slices/postSlice"
 import Postauthor from "./PostAuthor"
 import TimeAgo from "./TimeAgo"
-import ReactionButtons from "./ReactionButtons "
+import ReactionButtons from "./ReactionButtons"
 
 const SinglePostPage = () => {
     //retrieve postId
