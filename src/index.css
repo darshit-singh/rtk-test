@@ -123,3 +123,6 @@ form {
   font-size: 1rem;
 }
 
+.excerpt {
+  font-style: italic;
+}

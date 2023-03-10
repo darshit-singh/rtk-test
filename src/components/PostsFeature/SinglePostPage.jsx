@@ -1,13 +1,15 @@
 import { useSelector } from "react-redux"
 import { selectPostById } from "../../redux/slices/postSlice"
+import { useParams } from "react-router-dom"
 import Postauthor from "./PostAuthor"
 import TimeAgo from "./TimeAgo"
 import ReactionButtons from "./ReactionButtons"
 
 const SinglePostPage = () => {
     //retrieve postId
+    const { postId } = useParams()
 
-    const post = useSelector((state) => selectPostById(state, postId)) //logic to find is in the slice.
+    const post = useSelector((state) => selectPostById(state, Number(postId))) //logic to find is in the slice.
     if (!post) {
         return (
             <section>
